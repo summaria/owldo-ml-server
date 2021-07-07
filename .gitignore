@@ -1,0 +1,5 @@
+# env directory
+env/
+
+# cache
+__pycache__
