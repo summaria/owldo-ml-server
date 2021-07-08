@@ -1,11 +1,11 @@
-import simpletransformers.t5 as T5Model
-from config import QG_MODEL, ANS_MODEL, QG_MODEL_ARGS, ANS_MODEL_ARGS
+from simpletransformers.t5 import T5Model
+from .config import QG_MODEL, ANS_MODEL, QG_MODEL_ARGS, ANS_MODEL_ARGS
 
 class QG_QA_MODEL:
   def __init__(self):
     super()
-    self.ans_model = T5Model("t5", QG_MODEL, args=QG_MODEL_ARGS)
-    self.ques_model = T5Model("t5", ANS_MODEL , args=ANS_MODEL_ARGS)
+    self.ques_model = T5Model("t5", QG_MODEL, use_cuda=False, args=QG_MODEL_ARGS)
+    self.ans_model = T5Model("t5", ANS_MODEL , use_cuda=False, args=ANS_MODEL_ARGS)
   
   def train(self):
     pass
@@ -25,6 +25,7 @@ class QG_QA_MODEL:
     preds = self.ans_model.predict(
         [(("answer_question : " + self.prep_output_for_qa(question,context) )) for question in questions]
     )
+    print(preds)
     return preds
   
   def generate_questions(self, context):
@@ -45,6 +46,6 @@ class QG_QA_MODEL:
         answers = self.generate_answers(questions[i], modified_context[i])
         for j in range(len(answers)):
           output.append([questions[i][j], answers[j]])
-
+    
     self.displayoutput(output)
     return output

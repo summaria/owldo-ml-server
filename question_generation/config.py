@@ -15,6 +15,7 @@ QG_MODEL_ARGS = {
         "top_k": 50,
         "top_p": 0.95,
         "num_return_sequences": 3,
+        "fp16":False
 }
 
 ANS_MODEL_ARGS = {
@@ -31,4 +32,5 @@ ANS_MODEL_ARGS = {
         "top_k": 50,
         "top_p": 0.75,
         "num_return_sequences": 1,
+        "fp16":False
 }
