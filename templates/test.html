@@ -1,0 +1,119 @@
+{% extends "index.html" %}
+
+{% block title %} 
+  <title>Test API</title>
+{% endblock %}
+
+{% block content %}
+    <section class="text-gray-600 body-font">
+        <div class="h-screen container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+          <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+            <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">Test out the Owl.do API</h1>
+            <p class="mb-8 leading-relaxed">This endpoint helps you choose between text summarization and question generation. Paste a block of text and click on the appropriate option.</p>
+            <div class="mb-6 flex w-full ">
+              <textarea id="input-text" type="text" placeholder="Paste your text here" class="px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-2 shadow outline-none focus:outline-none focus:ring w-full"></textarea>
+            </div>
+            <div class="flex justify-center">
+              <button id="generate-summary" class=" inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg" disabled>Summarize text</button>
+              <button id="generate-qa" onclick="handleClick()" class=" ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">Generate questions</button>
+            </div>
+          </div>
+          
+          <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6" id="output-results">
+            <div id="loader" class="hidden border border-green-500 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+              <div class="animate-pulse flex space-x-4">
+                <div class="rounded-full bg-green-500 h-12 w-12"></div>
+                <div class="flex-1 space-y-4 py-1">
+                  <div class="h-4 bg-green-500 rounded w-3/4"></div>
+                  <div class="space-y-2">
+                    <div class="h-4 bg-green-500 rounded"></div>
+                    <div class="h-4 bg-green-500 rounded w-5/6"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+<script>
+  function deleteResults() {
+      var e = document.querySelector("#output-results");
+      var child = e.lastElementChild; 
+      while (child && child.id != "loader") {
+          e.removeChild(child);
+          child = e.lastElementChild;
+      }
+  }
+  function setLoading(val){
+    let btns = ["generate-summary", "generate-qa"]
+    btns.forEach(btn => {
+      if(val){
+        document.getElementById(btn).disabled = true;
+      }else {
+        document.getElementById(btn).removeAttribute("disabled");
+      }
+    })
+    let loader = document.getElementById("loader");
+    loader.classList.toggle("hidden");
+  }
+  const handleClick = () => {
+    deleteResults();
+    let input = document.getElementById('input-text').value;
+    let output = document.getElementById('output-results');
+    const queryUrl = window.origin + "/api/v1/qg/generate";
+    if(input && input.length>0){
+      setLoading(true);
+      fetch(queryUrl, {
+        method:'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({text: input})
+      })
+      .then( res => res.json())
+      .then( result => {
+        setLoading(false);
+        result?.data?.map(
+          block => {
+            let ques = block[0]
+            let ans = block[1]
+
+            let blockdiv = document.createElement('div');
+            blockdiv.innerHTML = `
+            <div class="flex flex-col p-4 m-3 bg-white shadow-md hover:shodow-lg rounded-2xl">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-12 h-12 rounded-2xl p-2 border border-blue-100 text-blue-400 bg-blue-50" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="flex flex-col ml-3" >
+                    <div class="font-medium leading-none">${ques}</div>
+                    <p class="text-sm text-gray-600 leading-none mt-1">${ans}
+                    </p>
+                  </div>
+                </div>
+              </div>`  
+            output.appendChild(blockdiv);
+          }
+        )
+      });
+    }
+    else {
+      output.innerHTML = `
+      <div class="py-3 px-5 mb-4 bg-red-100 text-red-900 text-sm rounded-md border border-red-200 flex items-center justify-between" role="alert">
+          <span>Input cannot be empty</span>
+          <button class="w-4" type="button" data-dismiss="alert" aria-label="Close" onclick="this.parentElement.remove();">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+          </button>
+      </div>
+      `
+    }
+  };
+</script>
+{% endblock %}
