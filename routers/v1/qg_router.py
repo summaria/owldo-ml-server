@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from question_generation import MODEL
+from question_generation import MODEL, MODEL_MCQ
 
 from typing import Optional
 from pydantic import BaseModel
@@ -14,7 +14,13 @@ class Text(BaseModel):
   text: str
 
 @router.post('/generate/')
-async def generate_questions(text: Text):
+def generate_questions(text: Text):
   return {
-    "data": MODEL.generate_question_and_answer(text.text)
+    "data": MODEL.generate_questions(text.text)
+  }
+
+@router.post('/generate-mcq/')
+def generate_mcq_questions(text: Text):
+  return {
+    "data": MODEL_MCQ.generate(text.text)
   }

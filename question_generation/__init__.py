@@ -1,3 +1,4 @@
-from .model import QG_QA_MODEL
+from .model import QAQG_MODEL, MCQ_QG_MODEL
 
-MODEL = QG_QA_MODEL()
+MODEL = QAQG_MODEL()
+MODEL_MCQ = MCQ_QG_MODEL()
