@@ -118,6 +118,47 @@
           Generate mcqs
         </button>
       </div>
+      <div class="w-full">
+        <input
+          id="convert-link"
+          class="
+            px-2
+            py-2
+            mt-16
+            mb-4
+            placeholder-blueGray-300
+            text-blueGray-600
+            relative
+            bg-white bg-white
+            rounded
+            text-base
+            border-2
+            shadow
+            outline-none
+            focus:outline-none focus:ring
+            w-full
+          "
+          placeholder="Add a link to a pdf/text instead"
+        />
+        <button
+          id="convert-link-button"
+          onclick="convertDocument()"
+          class="
+            inline-flex
+            text-white
+            bg-blue-500
+            border-0
+            py-2
+            px-6
+            focus:outline-none
+            hover:bg-blue-600
+            rounded
+            text-lg
+          "
+        >
+          Convert Document
+        </button>
+      </div>
     </div>
 
     <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6" id="output-results">
@@ -149,6 +190,23 @@
   </div>
 </section>
 <script>
+  function convertDocument() {
+    let url = document.getElementById("convert-link").value;
+    let docToTextUrl =
+      "http://localhost:5050/extract-text?" +
+      new URLSearchParams({
+        url,
+      });
+    fetch(docToTextUrl)
+      .then((res) => res.json())
+      .then((res) => {
+        let extractedText = res?.data?.text;
+        console.log(extractedText);
+        document.getElementById("input-text").value = extractedText;
+      })
+      .catch((err) => console.log(err));
+  }
+
   function deleteResults() {
     var e = document.querySelector("#output-results");
     var child = e.lastElementChild;
