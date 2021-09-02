@@ -20,5 +20,5 @@ class Text(BaseModel):
 @router.post('/generate/')
 def generate_questions(text: Text):
     return {
-        "data": MODEL.generate_summary(text.text)
+        "data": [ MODEL.generate_summary(text.text) ]
     }
