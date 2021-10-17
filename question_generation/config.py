@@ -1,3 +1,4 @@
+import os
 MCQ_MODEL = os.environ.get("MCQ_MODEL") or "D:\\programs\\projects\\side\\summaria\\ml-server\\models\\t5-race-qa-2\\"
 QA_QG_MODEL = os.environ.get("QA_QG_MODEL") or "D:\\programs\\projects\\side\\summaria\\ml-server\\models\\t5-large-best-model\\"
 
