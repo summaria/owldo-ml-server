@@ -1,6 +1,6 @@
 from simpletransformers.t5 import T5Model
 import re
-from .config import QG_MODEL, ANS_MODEL, MCQ_MODEL, QA_QG_MODEL, QG_MODEL_ARGS, ANS_MODEL_ARGS, MCQ_MODEL_ARGS, QA_QG_MODEL_ARGS
+from .config import MCQ_MODEL, QA_QG_MODEL, MCQ_MODEL_ARGS, QA_QG_MODEL_ARGS
 
 
 class QAQG_MODEL:
