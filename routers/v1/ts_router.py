@@ -15,10 +15,11 @@ async def ts_info():
 
 class Text(BaseModel):
     text: str
+    extent:int
 
 
 @router.post('/generate/')
-def generate_questions(text: Text):
+def generate_summary(textObj: Text):
     return {
-        "data": [ MODEL.generate_summary(text.text) ]
+        "data": [ MODEL.generate_summary(textObj.text, textObj.extent) ]
     }

@@ -25,7 +25,7 @@ class SUMMARY_MODEL:
 
     def splitString(self,summaryType=0, content=""):
         """
-            summaryType ->  0: easy, 1: medium, 2: extensive
+            !summaryType ->  0: easy, 1: medium, 2: extensive
             content -> whole string content
         """
         
@@ -51,8 +51,8 @@ class SUMMARY_MODEL:
         tgt_text = self.tokenizer.batch_decode(translated, skip_special_tokens=True)
         return tgt_text
 
-    def generate_summary(self,content, extend=1):
-        x = self.splitString(extend, content)
+    def generate_summary(self,content, extent=1):
+        x = self.splitString(extent, content)
         tgt_text = []
         for i in x:
             tgt_text += self.summarize(i)
